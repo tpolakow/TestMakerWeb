@@ -10,6 +10,50 @@ namespace TestMakerWeb.Controllers
   [Route("api/[controller]")]
   public class AnswerController : Controller
   {
+    #region Metody dostosowujące do konwencji REST
+    ///<summary>
+    ///Pobiera odpowiedź o podanym {id}
+    ///</summary>
+    ///<param name="id">identyfikator istniejącej odpowiedzi</param>
+    ///<returns>odpowiedź o podanym {id}</returns>
+    [HttpGet("{id}")]
+    public IActionResult Get(int id)
+    {
+      return Content("Jeszcze niezaimplementowane");
+    }
+
+    ///<summary>
+    ///Dodaje nową odpowiedź do bazy danych
+    ///</summary>
+    ///<param name="model">obiekt AnswerViewModel z danymi do wstawienia</param>
+    [HttpPut]
+    public IActionResult Put(AnswerViewModel model)
+    {
+      throw new NotImplementedException();
+    }
+
+    ///<summary>
+    ///Modyfikuje odpowiedź o podanym {id}
+    ///</summary>
+    ///<param name="model">obiekt AnswerViewModel z danymi do uaktualnienia</param>
+    [HttpPost]
+    public IActionResult Post(AnswerViewModel model)
+    {
+      throw new NotImplementedException();
+    }
+
+    ///<summary>
+    ///Usuwa odpowiedź o podanym {id} z bazy danych
+    ///</summary>
+    ///<param name="id">id istniejacej odpowiedzi</param>
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+      throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Metody routingu bazujące na atrybutach
     //GET api/answer/all
     [HttpGet("All/{questionId}")]
     public IActionResult All(int questionId)
@@ -36,16 +80,17 @@ namespace TestMakerWeb.Controllers
           Text = String.Format("Przykładowa odpowiedź {0}", i),
           CreatedDate = DateTime.Now,
           LastModifiedDate = DateTime.Now
-        });
-
-        //Przekaż wyniki w formacie JSON
-        return new JsonResult(
-          sampleAnswers,
-          new JsonSerializerSettings()
-          {
-            Formatting = Formatting.Indented
-          });
+        });    
       }
+
+      //Przekaż wyniki w formacie JSON
+      return new JsonResult(
+        sampleAnswers,
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
+    #endregion
   }
 }

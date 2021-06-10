@@ -10,6 +10,50 @@ namespace TestMakerWeb.Controllers
   [Route("api/[controller]")]
   public class ResultController : Controller
   {
+    #region Metody dostosowujące do konwencji REST
+    ///<summary>
+    ///Pobiera wynik o podanym {id}
+    ///</summary>
+    ///<param name="id">identyfikator istniejącego wyniku</param>
+    ///<returns>wynik o podanym {id}</returns>
+    [HttpGet("{id}")]
+    public IActionResult Get(int id)
+    {
+      return Content("Jeszcze niezaimplementowane");
+    }
+
+    ///<summary>
+    ///Dodaje nowy wynik do bazy danych
+    ///</summary>
+    ///<param name="model">obiekt ResultViewModel z danymi do wstawienia</param>
+    [HttpPut]
+    public IActionResult Put(ResultViewModel model)
+    {
+      throw new NotImplementedException();
+    }
+
+    ///<summary>
+    ///Modyfikuje wynik o podanym {id}
+    ///</summary>
+    ///<param name="model">obiekt ResultViewModel z danymi do uaktualnienia</param>
+    [HttpPost]
+    public IActionResult Post(ResultViewModel model)
+    {
+      throw new NotImplementedException();
+    }
+
+    ///<summary>
+    ///Usuwa wynik o podanym {id} z bazy danych
+    ///</summary>
+    ///<param name="id">id istniejacego wyniku</param>
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+      throw new NotImplementedException();
+    }
+    #endregion
+
+    #region Metody routingu bazujące na atrybutach
     //GET api/question/all
     [HttpGet("All/{quizId}")]
     public IActionResult All(int quizId)
@@ -47,5 +91,6 @@ namespace TestMakerWeb.Controllers
           Formatting = Formatting.Indented
         });
     }
+    #endregion
   }
 }
