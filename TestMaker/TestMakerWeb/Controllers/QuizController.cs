@@ -40,7 +40,11 @@ namespace TestMakerWeb.Controllers
       }
       //Przekaż wyniki w formacie JSON
       return new JsonResult(
-        sampleQuizzes);
+        sampleQuizzes,
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
 
     }
 
@@ -56,7 +60,11 @@ namespace TestMakerWeb.Controllers
       var sampleQuizzes = ((JsonResult)Latest(num)).Value as List<QuizViewModel>;
 
       return new JsonResult(
-        sampleQuizzes.OrderBy(t => t.Title));
+        sampleQuizzes.OrderBy(t => t.Title),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
@@ -71,7 +79,11 @@ namespace TestMakerWeb.Controllers
       var sampleQuizzes = ((JsonResult)Latest(num)).Value as List<QuizViewModel>;
 
       return new JsonResult(
-        sampleQuizzes.OrderBy(t => Guid.NewGuid()));
+        sampleQuizzes.OrderBy(t => Guid.NewGuid()),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
   }
 }
