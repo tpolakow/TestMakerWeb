@@ -27,11 +27,13 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz-list.component.ts" />
+    <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\quiz.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz-list.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz.component.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
