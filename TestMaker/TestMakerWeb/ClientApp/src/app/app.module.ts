@@ -23,7 +23,8 @@ import { QuizComponent } from './quiz/quiz.component';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' }
+      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'quiz/:id', component: QuizComponent }
     ])
   ],
   providers: [],
