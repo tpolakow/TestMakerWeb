@@ -47,5 +47,26 @@ namespace TestMakerWeb.Data
     [Required]
     public DateTime LastModifiedDate { get; set; }
     #endregion
+
+    #region Właściwości wczytywane leniwie
+    ///<summary>
+    ///Autor quizu: będzie wczytywany przy pierwszym
+    ///użyciu dzięki funkcjonalności leniwego wczytywania EF
+    ///</summary>
+    [ForeignKey("UserID")]
+    public virtual ApplicationUser User { get; set; }
+
+    ///<summary>
+    ///Lista wszystkich pytań powiązanych z quizem.
+    ///Zostanie wypełniona przy pierwszym użyciu dzięki funkcjonalności leniwego wczytywania EF.
+    ///</summary>
+    public virtual List<Question> Questions { get; set; }
+
+    ///<summary>
+    ///Lista wszystkich wyników powiązanych z quizem.
+    ///Zostanie wypełniona przy pierwszym użyciu dzięki funkcjonalności leniwego wczytywania EF.
+    ///</summary>
+    public virtual List<Result> Results { get; set; }
+    #endregion
   }
 }

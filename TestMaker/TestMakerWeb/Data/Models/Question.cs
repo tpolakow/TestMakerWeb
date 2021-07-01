@@ -40,5 +40,18 @@ namespace TestMakerWeb.Data
     [Required]
     public DateTime LastModifiedDate { get; set; }
     #endregion
+
+    #region Właściwości wczytywane leniwie
+    ///<summary>
+    ///Nadrzędny quiz
+    ///</summary>
+    [ForeignKey("QuizID")]
+    public virtual Quiz Quiz { get; set; }
+
+    ///<summary>
+    ///Lista zawierająca odpowiedzi powiązane z pytaniem.
+    ///</summary>
+    public virtual List<Answer> Answers { get; set; }
+    #endregion
   }
 }
