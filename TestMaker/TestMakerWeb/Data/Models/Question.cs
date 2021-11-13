@@ -45,7 +45,7 @@ namespace TestMakerWeb.Data
     ///<summary>
     ///Nadrzędny quiz
     ///</summary>
-    [ForeignKey("QuizID")]
+    [ForeignKey("QuizId")]
     public virtual Quiz Quiz { get; set; }
 
     ///<summary>

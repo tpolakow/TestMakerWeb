@@ -48,7 +48,7 @@ namespace TestMakerWeb.Data
     ///<summary>
     ///Nadrzędne pytanie
     ///</summary>
-    [ForeignKey("QuestionID")]
+    [ForeignKey("QuestionId")]
     public virtual Question Question { get; set; }
     #endregion
   }

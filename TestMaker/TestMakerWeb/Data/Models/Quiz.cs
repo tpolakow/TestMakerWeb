@@ -53,7 +53,7 @@ namespace TestMakerWeb.Data
     ///Autor quizu: będzie wczytywany przy pierwszym
     ///użyciu dzięki funkcjonalności leniwego wczytywania EF
     ///</summary>
-    [ForeignKey("UserID")]
+    [ForeignKey("UserId")]
     public virtual ApplicationUser User { get; set; }
 
     ///<summary>

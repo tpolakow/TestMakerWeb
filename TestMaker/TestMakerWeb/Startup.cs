@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestMakerWeb.Data;
 
 namespace TestMakerWeb
 {
@@ -25,6 +27,15 @@ namespace TestMakerWeb
       {
         configuration.RootPath = "ClientApp/dist";
       });
+
+      //Dodanie obs³ugi Entity Framework zwi¹zanej z SqlServer.
+      services.AddEntityFrameworkSqlServer();
+
+      //Dodanie ApplicationDbContext.
+      services.AddDbContext<ApplicationDbContext>(
+        options =>
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+      );
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
