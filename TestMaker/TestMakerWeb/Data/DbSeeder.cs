@@ -184,7 +184,7 @@ namespace TestMakerWeb.Data
         dbContext.Questions.Add(question);
         dbContext.SaveChanges();
 
-        for(int i2 = 0; i2 < numberOfAnswersPerQuestion; i++)
+        for(int i2 = 0; i2 < numberOfAnswersPerQuestion; i2++)
         {
           var e2 = dbContext.Answers.Add(new Answer()
           {

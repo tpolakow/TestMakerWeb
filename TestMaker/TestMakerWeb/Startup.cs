@@ -86,6 +86,16 @@ namespace TestMakerWeb
           spa.UseAngularCliServer(npmScript: "start");
         }
       });
+
+      //Utwórz zakres us³ugi, aby otrzymaæ instancjê ApplicationDbContext dziêki wstrzykiwaniu zale¿noœci
+      using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+      {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        //Utwórz bazê danych, jeœli nie istnieje, i zastosuj wszystkie oczekuj¹ce migracje
+        dbContext.Database.Migrate();
+        //Wype³nij bazê danymi pocz¹tkowymi
+        DbSeeder.Seed(dbContext);
+      }
     }
   }
 }
