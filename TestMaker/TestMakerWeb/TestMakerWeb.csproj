@@ -40,6 +40,7 @@
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\src\app\login\login.component.ts" />
     <None Remove="ClientApp\src\app\pagenotfound\pagenotfound.component.ts" />
+    <None Remove="ClientApp\src\app\quiz\quiz-edit.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz-list.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
   </ItemGroup>
@@ -51,6 +52,9 @@
     <TypeScriptCompile Include="ClientApp\src\app\about\about.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\quiz.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\login\login.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz-edit.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz-list.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz.component.ts" />
   </ItemGroup>
