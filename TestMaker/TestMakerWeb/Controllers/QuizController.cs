@@ -47,6 +47,15 @@ namespace TestMakerWeb.Controllers
       #endregion
       var quiz = DbContext.Quizzes.Where(i => i.Id == id).FirstOrDefault();
 
+      //Obsłuż żądania proszące o nieistniejące quizy
+      if (quiz == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", id)
+        });
+      }
+
       //Przekaż wyniki w formacie JSON
       return new JsonResult(
         //v,
@@ -61,20 +70,82 @@ namespace TestMakerWeb.Controllers
     ///Dodaje nowy quiz do bazy danych
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do wstawienia</param>
-    [HttpPut]
-    public IActionResult Put(QuizViewModel model)
+    [HttpPost]
+    public IActionResult Post([FromBody]QuizViewModel model)
     {
-      throw new NotImplementedException();
+      //Zwraca ogólny kod statusu HTTP 500 (Server Error),
+      //jeśli dane przesłane przez klienta są niewłaściwe
+      if (model == null) return new StatusCodeResult(500);
+
+      //Obsługa wstawienia (bez odwzorowania obiektów)
+      var quiz = new Quiz();
+
+      //Właściwości pobierane z żądania
+      quiz.Title = model.Title;
+      quiz.Description = model.Description;
+      quiz.Text = model.Text;
+      quiz.Notes = model.Notes;
+
+      //Właściwości ustawiane tylko przez serwer
+      quiz.CreatedDate = DateTime.Now;
+      quiz.LastModifiedDate = quiz.CreatedDate;
+
+      //Tymczasowo ustaw autora na użytkownika administracyjnego
+      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+
+      //Dodaj nowy quiz
+      DbContext.Quizzes.Add(quiz);
+      DbContext.SaveChanges();
+
+      //Zwróć nowo utworzony quiz do klienta
+      return new JsonResult(quiz.Adapt<QuizViewModel>(),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
     ///Modyfikuje quiz o podanym {id}
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do uaktualnienia</param>
-    [HttpPost]
-    public IActionResult Post(QuizViewModel model)
+    [HttpPut]
+    public IActionResult Put([FromBody]QuizViewModel model)
     {
-      throw new NotImplementedException();
+      //Zwraca ogólny kod statusu HTTP 500 (Server Error),
+      //jeśli dane przesłane przez klienta są niewłaściwe
+      if (model == null) return new StatusCodeResult(500);
+
+      //Obsługa wstawienia (bez odwzorowania obiektów)
+      var quiz = DbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
+
+      //Obsłuż żądania proszące o nieistniejące quizy
+      if (quiz == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", model.Id)
+        });
+      }
+
+      //Właściwości pobierane z żądania
+      quiz.Title = model.Title;
+      quiz.Description = model.Description;
+      quiz.Text = model.Text;
+      quiz.Notes = model.Notes;
+
+      //Właściwości ustawiane tylko przez serwer
+      quiz.LastModifiedDate = DateTime.Now;
+
+      //Zapisz zmiany w bazie
+      DbContext.SaveChanges();
+
+      //Zwróć zaktualizowany quiz do klienta
+      return new JsonResult(quiz.Adapt<QuizViewModel>(),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
@@ -84,7 +155,20 @@ namespace TestMakerWeb.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      throw new NotImplementedException();
+      var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
+
+      if (quiz == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", id)
+        });
+      }
+
+      DbContext.Quizzes.Remove(quiz);
+      DbContext.SaveChanges();
+
+      return new NoContentResult();
     }
     #endregion
 
