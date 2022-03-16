@@ -9,5 +9,9 @@
       <label>Opis:</label>
       <textarea [(ngModel)]=" quiz.Description" placeholder="Wstaw opis..."></textarea>
     </li>
+    <div>
+      <input type="button" value="Edytuj" (click)="onEdit()" />
+      <input type="button" value="Usuń" (click)="onDelete()" />
+    </div>
   </ul>
 </div>
