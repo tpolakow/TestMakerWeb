@@ -4,12 +4,19 @@ using Newtonsoft.Json;
 using TestMakerWeb.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using TestMakerWeb.Data;
+using Mapster;
 
 namespace TestMakerWeb.Controllers
 {
   [Route("api/[controller]")]
   public class AnswerController : Controller
   {
+    private ApplicationDbContext DbContext;
+    public AnswerController(ApplicationDbContext context)
+    {
+      DbContext = context;
+    }
     #region Metody dostosowujące do konwencji REST
     ///<summary>
     ///Pobiera odpowiedź o podanym {id}
@@ -19,27 +26,77 @@ namespace TestMakerWeb.Controllers
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
-      return Content("Jeszcze niezaimplementowane");
+      var answer = DbContext.Answers.Where(q => q.Id == id).FirstOrDefault();
+      if (answer == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono odpowiedzi o identyfikatorze {0}", id)
+        });
+      }
+      return new JsonResult(
+        answer.Adapt<AnswerViewModel>(),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
     ///Dodaje nową odpowiedź do bazy danych
     ///</summary>
     ///<param name="model">obiekt AnswerViewModel z danymi do wstawienia</param>
-    [HttpPut]
-    public IActionResult Put(AnswerViewModel model)
+    [HttpPost]
+    public IActionResult Post([FromBody]AnswerViewModel model)
     {
-      throw new NotImplementedException();
+      if (model == null) return new StatusCodeResult(500);
+
+      var answer = model.Adapt<Answer>();
+
+      answer.CreatedDate = DateTime.Now;
+      answer.LastModifiedDate = answer.CreatedDate;
+
+      DbContext.Answers.Add(answer);
+      DbContext.SaveChanges();
+
+      return new JsonResult(
+        answer.Adapt<AnswerViewModel>(),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
     ///Modyfikuje odpowiedź o podanym {id}
     ///</summary>
     ///<param name="model">obiekt AnswerViewModel z danymi do uaktualnienia</param>
-    [HttpPost]
-    public IActionResult Post(AnswerViewModel model)
+    [HttpPut]
+    public IActionResult Put([FromBody]AnswerViewModel model)
     {
-      throw new NotImplementedException();
+      if (model == null) return new StatusCodeResult(500);
+
+      var answer = DbContext.Answers.Where(q => q.Id == model.Id).FirstOrDefault();
+
+      if (answer == null) return NotFound(new
+      {
+        Error = String.Format("Nie znaleziono odpowiedzi o identyfikatorze {0}", model.Id)
+      });
+
+      answer.QuestionId = model.QuestionId;
+      answer.Text = model.Text;
+      answer.Value = model.Value;
+      answer.Notes = model.Notes;
+      answer.LastModifiedDate = DateTime.Now;
+
+      DbContext.SaveChanges();
+
+      return new JsonResult(
+        answer.Adapt<AnswerViewModel>(),
+        new JsonSerializerSettings()
+        {
+          Formatting = Formatting.Indented
+        });
     }
 
     ///<summary>
@@ -49,7 +106,17 @@ namespace TestMakerWeb.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      throw new NotImplementedException();
+      var answer = DbContext.Answers.Where(q => q.Id == id).FirstOrDefault();
+
+      if (answer == null) return NotFound(new
+      {
+        Error = String.Format("Nie znaleziono odpowiedzi o identyfikatorze {0}", id)
+      });
+
+      DbContext.Answers.Remove(answer);
+      DbContext.SaveChanges();
+
+      return new NoContentResult();
     }
     #endregion
 
@@ -58,34 +125,38 @@ namespace TestMakerWeb.Controllers
     [HttpGet("All/{questionId}")]
     public IActionResult All(int questionId)
     {
-      var sampleAnswers = new List<AnswerViewModel>();
+      #region temp
+      //var sampleAnswers = new List<AnswerViewModel>();
 
-      //Dodaj pierwszą przykładową odpowiedź
-      sampleAnswers.Add(new AnswerViewModel()
-      {
-        Id = 1,
-        QuestionId = questionId,
-        Text = "Przyjaciół i rodzinę",
-        CreatedDate = DateTime.Now,
-        LastModifiedDate = DateTime.Now
-      });
+      ////Dodaj pierwszą przykładową odpowiedź
+      //sampleAnswers.Add(new AnswerViewModel()
+      //{
+      //  Id = 1,
+      //  QuestionId = questionId,
+      //  Text = "Przyjaciół i rodzinę",
+      //  CreatedDate = DateTime.Now,
+      //  LastModifiedDate = DateTime.Now
+      //});
 
-      //Dodaj kilka następnych przykładowych odpowiedzi
-      for(int i = 2; i <= 5; i++)
-      {
-        sampleAnswers.Add(new AnswerViewModel()
-        {
-          Id = i,
-          QuestionId = questionId,
-          Text = String.Format("Przykładowa odpowiedź {0}", i),
-          CreatedDate = DateTime.Now,
-          LastModifiedDate = DateTime.Now
-        });    
-      }
+      ////Dodaj kilka następnych przykładowych odpowiedzi
+      //for(int i = 2; i <= 5; i++)
+      //{
+      //  sampleAnswers.Add(new AnswerViewModel()
+      //  {
+      //    Id = i,
+      //    QuestionId = questionId,
+      //    Text = String.Format("Przykładowa odpowiedź {0}", i),
+      //    CreatedDate = DateTime.Now,
+      //    LastModifiedDate = DateTime.Now
+      //  });    
+      //}
+      #endregion
+      var answers = DbContext.Answers.Where(q => q.QuestionId == questionId).ToList();
 
       //Przekaż wyniki w formacie JSON
       return new JsonResult(
-        sampleAnswers,
+        //sampleAnswers,
+        answers.Adapt<List<AnswerViewModel>>(),
         new JsonSerializerSettings()
         {
           Formatting = Formatting.Indented
