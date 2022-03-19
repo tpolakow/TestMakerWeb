@@ -8,7 +8,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let question in questions">
+      <tr *ngFor="let question of questions">
         <td>{{question.Text}}</td>
         <td>
           <input type="button" value="Edytuj"
@@ -20,7 +20,7 @@
     </tbody>
   </table>
 </div>
-<div *ngIf="question.length == 0">
+<div *ngIf="questions.length == 0">
   Ten quiz nie ma jeszcze pytań:
   kliknij <strong>Dodaj pytanie</strong>, aby dodać pierwsze pytanie.
 </div>
