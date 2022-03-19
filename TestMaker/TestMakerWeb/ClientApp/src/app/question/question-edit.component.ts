@@ -8,7 +8,7 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ['./question-edit.component.css']
 })
 
-export class QuestionEditComponent implements OnInit {
+export class QuestionEditComponent {
   question: Question;
   title: string;
   //TRUE jeśli istnieje, FALSE jeśli nowe pytanie
@@ -44,6 +44,13 @@ export class QuestionEditComponent implements OnInit {
 
     if (this.editMode) {
       this.http.put<Question>(url, question).subscribe(res => {
+        var v = res;
+        console.log("Pytanie " + v.Id + " zostało uaktualnione.");
+        this.router.navigate(["quiz/edit", v.QuizId]);
+      }, error => console.error(error));
+    }
+    else {
+      this.http.post<Question>(url, question).subscribe(res => {
         var v = res;
         console.log("Pytanie " + v.Id + " zostało utworzone.");
         this.router.navigate(["quiz/edit", v.QuizId]);
