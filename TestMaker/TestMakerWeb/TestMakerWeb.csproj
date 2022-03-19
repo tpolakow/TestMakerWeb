@@ -50,6 +50,8 @@
     <None Remove="ClientApp\src\app\quiz\quiz-edit.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz-list.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
+    <None Remove="ClientApp\src\app\result\result-edit.component.ts" />
+    <None Remove="ClientApp\src\app\result\result-list.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,6 +85,12 @@
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz-list.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\result\result-edit.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\result\result-list.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
