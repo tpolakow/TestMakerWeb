@@ -37,21 +37,35 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\about\about.component.ts" />
+    <None Remove="ClientApp\src\app\interfaces\answer.ts" />
+    <None Remove="ClientApp\src\app\interfaces\question.ts" />
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
+    <None Remove="ClientApp\src\app\interfaces\result.ts" />
     <None Remove="ClientApp\src\app\login\login.component.ts" />
     <None Remove="ClientApp\src\app\pagenotfound\pagenotfound.component.ts" />
+    <None Remove="ClientApp\src\app\question\question-list.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz-edit.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz-list.component.ts" />
     <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\result.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\answer.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\question.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\pagenotfound\pagenotfound.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\about\about.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\quiz.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\login\login.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\question\question-list.component.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\quiz\quiz-edit.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
