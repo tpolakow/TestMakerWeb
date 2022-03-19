@@ -14,4 +14,5 @@
     <input type="button" value="Anuluj"
            (click)="onBack()" />
   </div>
+  <answer-list [question]="question" *ngIf="editMode"></answer-list>
 </div>

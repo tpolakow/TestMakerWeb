@@ -37,6 +37,8 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\app\about\about.component.ts" />
+    <None Remove="ClientApp\src\app\answer\answer-edit.component.ts" />
+    <None Remove="ClientApp\src\app\answer\answer-list.component.ts" />
     <None Remove="ClientApp\src\app\interfaces\answer.ts" />
     <None Remove="ClientApp\src\app\interfaces\question.ts" />
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
@@ -51,6 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\answer\answer-edit.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\answer\answer-list.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\result.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
