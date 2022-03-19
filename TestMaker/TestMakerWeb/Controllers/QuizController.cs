@@ -9,19 +9,10 @@ using Mapster;
 
 namespace TestMakerWeb.Controllers
 {
-  [Route("api/[controller]")]
-  public class QuizController : Controller
+  public class QuizController : BaseApiController
   {
-    #region Pola prywatne
-    private ApplicationDbContext DbContext;
-    #endregion
-
     #region Konstruktor
-    public QuizController(ApplicationDbContext context)
-    {
-      //Utworzenie ApplicationDbContext poprzez wstrzykiwanie zalezności
-      DbContext = context;
-    }
+    public QuizController(ApplicationDbContext context) : base(context) { }
     #endregion
 
     #region Metody dostosowujące do konwencji REST
@@ -47,34 +38,91 @@ namespace TestMakerWeb.Controllers
       #endregion
       var quiz = DbContext.Quizzes.Where(i => i.Id == id).FirstOrDefault();
 
-      //Przekaż wyniki w formacie JSON
-      return new JsonResult(
-        //v,
-        quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings()
+      //Obsłuż żądania proszące o nieistniejące quizy
+      if (quiz == null)
+      {
+        return NotFound(new
         {
-          Formatting = Formatting.Indented
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", id)
         });
+      }
+
+      //Przekaż wyniki w formacie JSON
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
     ///Dodaje nowy quiz do bazy danych
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do wstawienia</param>
-    [HttpPut]
-    public IActionResult Put(QuizViewModel model)
+    [HttpPost]
+    public IActionResult Post([FromBody]QuizViewModel model)
     {
-      throw new NotImplementedException();
+      //Zwraca ogólny kod statusu HTTP 500 (Server Error),
+      //jeśli dane przesłane przez klienta są niewłaściwe
+      if (model == null) return new StatusCodeResult(500);
+
+      //Obsługa wstawienia (bez odwzorowania obiektów)
+      var quiz = new Quiz();
+
+      //Właściwości pobierane z żądania
+      quiz.Title = model.Title;
+      quiz.Description = model.Description;
+      quiz.Text = model.Text;
+      quiz.Notes = model.Notes;
+
+      //Właściwości ustawiane tylko przez serwer
+      quiz.CreatedDate = DateTime.Now;
+      quiz.LastModifiedDate = quiz.CreatedDate;
+
+      //Tymczasowo ustaw autora na użytkownika administracyjnego
+      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+
+      //Dodaj nowy quiz
+      DbContext.Quizzes.Add(quiz);
+      DbContext.SaveChanges();
+
+      //Zwróć nowo utworzony quiz do klienta
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
     ///Modyfikuje quiz o podanym {id}
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do uaktualnienia</param>
-    [HttpPost]
-    public IActionResult Post(QuizViewModel model)
+    [HttpPut]
+    public IActionResult Put([FromBody]QuizViewModel model)
     {
-      throw new NotImplementedException();
+      //Zwraca ogólny kod statusu HTTP 500 (Server Error),
+      //jeśli dane przesłane przez klienta są niewłaściwe
+      if (model == null) return new StatusCodeResult(500);
+
+      //Obsługa wstawienia (bez odwzorowania obiektów)
+      var quiz = DbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
+
+      //Obsłuż żądania proszące o nieistniejące quizy
+      if (quiz == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", model.Id)
+        });
+      }
+
+      //Właściwości pobierane z żądania
+      quiz.Title = model.Title;
+      quiz.Description = model.Description;
+      quiz.Text = model.Text;
+      quiz.Notes = model.Notes;
+
+      //Właściwości ustawiane tylko przez serwer
+      quiz.LastModifiedDate = DateTime.Now;
+
+      //Zapisz zmiany w bazie
+      DbContext.SaveChanges();
+
+      //Zwróć zaktualizowany quiz do klienta
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -84,7 +132,20 @@ namespace TestMakerWeb.Controllers
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-      throw new NotImplementedException();
+      var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
+
+      if (quiz == null)
+      {
+        return NotFound(new
+        {
+          Error = String.Format("Nie znaleziono quizu o identyfikatorze {0}", id)
+        });
+      }
+
+      DbContext.Quizzes.Remove(quiz);
+      DbContext.SaveChanges();
+
+      return new NoContentResult();
     }
     #endregion
 
@@ -126,13 +187,7 @@ namespace TestMakerWeb.Controllers
       //Przekaż wyniki w formacie JSON
       var latest = DbContext.Quizzes.OrderByDescending(q => q.CreatedDate).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes,
-        latest.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(latest.Adapt<List<QuizViewModel>>(), JsonSettings);
 
     }
 
@@ -150,13 +205,7 @@ namespace TestMakerWeb.Controllers
       #endregion
       var byTitle = DbContext.Quizzes.OrderBy(q => q.Title).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes.OrderBy(t => t.Title),
-        byTitle.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(byTitle.Adapt<List<QuizViewModel>>(), JsonSettings);
     }
 
     ///<summary>
@@ -173,13 +222,7 @@ namespace TestMakerWeb.Controllers
       #endregion
       var random = DbContext.Quizzes.OrderBy(q => Guid.NewGuid()).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes.OrderBy(t => Guid.NewGuid()),
-        random.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(random.Adapt<List<QuizViewModel>>(), JsonSettings);
     }
     #endregion
   }
