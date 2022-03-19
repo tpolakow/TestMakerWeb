@@ -9,19 +9,10 @@ using Mapster;
 
 namespace TestMakerWeb.Controllers
 {
-  [Route("api/[controller]")]
-  public class QuizController : Controller
+  public class QuizController : BaseApiController
   {
-    #region Pola prywatne
-    private ApplicationDbContext DbContext;
-    #endregion
-
     #region Konstruktor
-    public QuizController(ApplicationDbContext context)
-    {
-      //Utworzenie ApplicationDbContext poprzez wstrzykiwanie zalezności
-      DbContext = context;
-    }
+    public QuizController(ApplicationDbContext context) : base(context) { }
     #endregion
 
     #region Metody dostosowujące do konwencji REST
@@ -57,13 +48,7 @@ namespace TestMakerWeb.Controllers
       }
 
       //Przekaż wyniki w formacie JSON
-      return new JsonResult(
-        //v,
-        quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -98,11 +83,7 @@ namespace TestMakerWeb.Controllers
       DbContext.SaveChanges();
 
       //Zwróć nowo utworzony quiz do klienta
-      return new JsonResult(quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -141,11 +122,7 @@ namespace TestMakerWeb.Controllers
       DbContext.SaveChanges();
 
       //Zwróć zaktualizowany quiz do klienta
-      return new JsonResult(quiz.Adapt<QuizViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -210,13 +187,7 @@ namespace TestMakerWeb.Controllers
       //Przekaż wyniki w formacie JSON
       var latest = DbContext.Quizzes.OrderByDescending(q => q.CreatedDate).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes,
-        latest.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(latest.Adapt<List<QuizViewModel>>(), JsonSettings);
 
     }
 
@@ -234,13 +205,7 @@ namespace TestMakerWeb.Controllers
       #endregion
       var byTitle = DbContext.Quizzes.OrderBy(q => q.Title).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes.OrderBy(t => t.Title),
-        byTitle.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(byTitle.Adapt<List<QuizViewModel>>(), JsonSettings);
     }
 
     ///<summary>
@@ -257,13 +222,7 @@ namespace TestMakerWeb.Controllers
       #endregion
       var random = DbContext.Quizzes.OrderBy(q => Guid.NewGuid()).Take(num).ToList();
 
-      return new JsonResult(
-        //sampleQuizzes.OrderBy(t => Guid.NewGuid()),
-        random.Adapt<List<QuizViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(random.Adapt<List<QuizViewModel>>(), JsonSettings);
     }
     #endregion
   }

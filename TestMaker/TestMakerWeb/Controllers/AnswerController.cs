@@ -9,14 +9,9 @@ using Mapster;
 
 namespace TestMakerWeb.Controllers
 {
-  [Route("api/[controller]")]
-  public class AnswerController : Controller
+  public class AnswerController : BaseApiController
   {
-    private ApplicationDbContext DbContext;
-    public AnswerController(ApplicationDbContext context)
-    {
-      DbContext = context;
-    }
+    public AnswerController(ApplicationDbContext context) : base(context) { }
     #region Metody dostosowujące do konwencji REST
     ///<summary>
     ///Pobiera odpowiedź o podanym {id}
@@ -34,12 +29,7 @@ namespace TestMakerWeb.Controllers
           Error = String.Format("Nie znaleziono odpowiedzi o identyfikatorze {0}", id)
         });
       }
-      return new JsonResult(
-        answer.Adapt<AnswerViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -59,12 +49,7 @@ namespace TestMakerWeb.Controllers
       DbContext.Answers.Add(answer);
       DbContext.SaveChanges();
 
-      return new JsonResult(
-        answer.Adapt<AnswerViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -91,12 +76,7 @@ namespace TestMakerWeb.Controllers
 
       DbContext.SaveChanges();
 
-      return new JsonResult(
-        answer.Adapt<AnswerViewModel>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(answer.Adapt<AnswerViewModel>(), JsonSettings);
     }
 
     ///<summary>
@@ -154,13 +134,7 @@ namespace TestMakerWeb.Controllers
       var answers = DbContext.Answers.Where(q => q.QuestionId == questionId).ToList();
 
       //Przekaż wyniki w formacie JSON
-      return new JsonResult(
-        //sampleAnswers,
-        answers.Adapt<List<AnswerViewModel>>(),
-        new JsonSerializerSettings()
-        {
-          Formatting = Formatting.Indented
-        });
+      return new JsonResult(answers.Adapt<List<AnswerViewModel>>(), JsonSettings);
     }
     #endregion
   }

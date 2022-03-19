@@ -9,14 +9,9 @@ using Mapster;
 
 namespace TestMakerWeb.Controllers
 {
-  [Route("api/[controller]")]
-  public class ResultController : Controller
+  public class ResultController : BaseApiController
   {
-    private ApplicationDbContext DbContext;
-    public ResultController(ApplicationDbContext context)
-    {
-      DbContext = context;
-    }
+    public ResultController(ApplicationDbContext context) : base(context) { }
     #region Metody dostosowujące do konwencji REST
     ///<summary>
     ///Pobiera wynik o podanym {id}
