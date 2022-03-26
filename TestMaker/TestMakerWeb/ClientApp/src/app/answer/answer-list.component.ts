@@ -49,7 +49,7 @@ export class AnswerListComponent implements OnChanges {
 
   onDelete(answer: Answer) {
     if (confirm("Czy naprawdę chcesz usunąć tę odpowiedź?")) {
-      var url = this.baseUrl + "api/answe/" + answer.Id;
+      var url = this.baseUrl + "api/answer/" + answer.Id;
       this.http.delete<Answer>(url).subscribe(res => {
         console.log("Odpowiedź " + answer.Id + " została usunięta.");
         //Odśwież listę odpowiedzi
