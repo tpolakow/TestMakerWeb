@@ -1,18 +1,26 @@
 <h2>{{title}}</h2>
 <div class="question-edit">
-  <div>
-    <label for="text">Treść pytania:</label>
-    <br/>
-    <textarea id="text" [(ngModel)]="question.Text"
-              placeholder="Wpisz odpowiednią treść..."></textarea>
-  </div>
-  <div>
-    <input *ngIf="editMode" type="button" value="Zapisz zmiany"
-           (click)="onSubmit(question)" />
-    <input *ngIf="!editMode" type="button" value="Utwórz pytanie"
-           (click)="onSubmit(question)" />
-    <input type="button" value="Anuluj"
-           (click)="onBack()" />
-  </div>
+  <form [formGroup]="form" (mgSubmit)="onSubmit()">
+    <div [ngClass]="{ 'has-error has-feedback' : hasError('Text')}">
+      <label for="text">Treść pytania:</label>
+      <br />
+      <textarea id="text" formControlName="Text" required placeholder="Wpisz odpowiednią treść..."></textarea>
+      <span *ngIf="hasError('Text')" aria-hidden="true"></span>
+      <div *ngIf="hasError('Text')">
+        To pole jest wymagane.
+      </div>
+    </div>
+    <div>
+      <button *ngIf="editMode" type="submit" [disabled]="form.invalid">
+        Zapisz zmiany
+      </button>
+      <button *ngIf="!editMode" type="submit" [disabled]="form.invalid">
+        Utwórz pytanie
+      </button>
+      <button type="submit" (click)="onBack()">
+        Anuluj
+      </button>
+    </div>
+  </form>
   <answer-list [question]="question" *ngIf="editMode"></answer-list>
 </div>
