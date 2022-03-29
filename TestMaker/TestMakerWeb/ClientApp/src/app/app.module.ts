@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { QuizListComponent } from './quiz/quiz-list.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { QuizEditComponent } from './quiz/quiz-edit.component';
+import { QuizSearchComponent } from './quiz/quiz-search.component';
 import { QuestionListComponent } from './question/question-list.component';
 import { QuestionEditComponent } from './question/question-edit.component';
 import { AnswerListComponent } from './answer/answer-list.component';
@@ -28,6 +29,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
     QuizListComponent,
     QuizComponent,
     QuizEditComponent,
+    QuizSearchComponent,
     QuestionListComponent,
     QuestionEditComponent,
     AnswerListComponent,
