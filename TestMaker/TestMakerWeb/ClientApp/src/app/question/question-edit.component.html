@@ -1,6 +1,6 @@
 <h2>{{title}}</h2>
 <div class="question-edit">
-  <form [formGroup]="form" (mgSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div [ngClass]="{ 'has-error has-feedback' : hasError('Text')}">
       <label for="text">Treść pytania:</label>
       <br />
