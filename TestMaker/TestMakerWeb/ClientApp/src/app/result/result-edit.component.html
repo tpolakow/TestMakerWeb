@@ -6,7 +6,6 @@
       <br />
       <textarea id="text" formControlName="Text" required
                 placeholder="Wpisz odpowiednią treść..."></textarea>
-      <span *ngIf="hasError('Text')" aria-hidden="true"></span>
       <div *ngIf="hasError('Text')">
         To pole jest wymagane.
       </div>
@@ -16,7 +15,6 @@
       <br />
       <input type="number" id="minValue" name="minValue"
              formControlName="MinValue" />
-      <span *ngIf="hasError('MinValue')" aria-hidden="true"></span>
       <div *ngIf="hasError('MinValue')">
         Wpisz wartość liczbową lub pozostaw pole puste, aby dopasować się do wartości mniejszych od MaxValue.
       </div>

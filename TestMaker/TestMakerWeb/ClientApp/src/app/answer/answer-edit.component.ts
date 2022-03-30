@@ -89,6 +89,7 @@ export class AnswerEditComponent {
     var url = this.baseUrl + "api/answer";
 
     if (this.editMode) {
+      tempAnswer.Id = this.answer.Id;
       this.http.put<Answer>(url, tempAnswer).subscribe(res => {
         var v = res;
         console.log("Odpowiedź " + v.Id + " została uaktualniona.");

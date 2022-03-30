@@ -1,11 +1,10 @@
 <h2>{{title}}</h2>
 <div class="quiz-edit">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div [ngClass]="{ 'has-error has-feedback' : hasError('Title')}">
+    <div>
       <label for="title">Tytuł quizu:</label>
       <br />
       <input type="text" id="title" formControlName="Title" required placeholder="Wpisz tytuł..." />
-      <span *ngIf="hasError('Title')" aria-hidden="true"></span>
       <div *ngIf="hasError('Title')">
         To pole jest wymagane.
       </div>

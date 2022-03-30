@@ -1,11 +1,10 @@
 <h2>{{title}}</h2>
 <div class="question-edit">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div [ngClass]="{ 'has-error has-feedback' : hasError('Text')}">
+    <div>
       <label for="text">Treść pytania:</label>
       <br />
       <textarea id="text" formControlName="Text" required placeholder="Wpisz odpowiednią treść..."></textarea>
-      <span *ngIf="hasError('Text')" aria-hidden="true"></span>
       <div *ngIf="hasError('Text')">
         To pole jest wymagane.
       </div>

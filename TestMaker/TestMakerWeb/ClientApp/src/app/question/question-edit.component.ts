@@ -84,6 +84,7 @@ export class QuestionEditComponent {
     var url = this.baseUrl + "api/question";
 
     if (this.editMode) {
+      tempQuestion.Id = this.question.Id;
       this.http.put<Question>(url, tempQuestion).subscribe(res => {
         var v = res;
         console.log("Pytanie " + v.Id + " zostało uaktualnione.");
