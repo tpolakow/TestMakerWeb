@@ -90,6 +90,7 @@ export class ResultEditComponent {
     var url = this.baseUrl + "api/result";
 
     if (this.editMode) {
+      tempResult.Id = this.result.Id;
       this.http.put<Result>(url, tempResult).subscribe(res => {
         var v = res;
         console.log("Wynik " + v.Id + " został uaktualniony.");

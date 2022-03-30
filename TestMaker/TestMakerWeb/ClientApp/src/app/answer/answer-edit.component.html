@@ -1,17 +1,16 @@
 <h2>{{title}}</h2>
 <div class="answer-edit">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div [ngClass]="{ 'has-error has-feedback' : hasError('Text')}">
+    <div>
       <label for="text">Treść odpowiedzi:</label>
       <br />
       <textarea id="text" formControlName="Text" required
                 placeholder="Wpisz odpowiednią treść..."></textarea>
-      <span *ngIf="hasError('Text')" aria-hidden="true"></span>
       <div *ngIf="hasError('Text')">
         To pole jest wymagane.
       </div>
     </div>
-    <div [ngClass]="{ 'has-error has-feedback' : hasError('Value')}">
+    <div>
       <label for="text">Wartość punktowa:</label>
       <br />
       <select id="value" formControlName="Value" required>
