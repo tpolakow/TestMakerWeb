@@ -13,6 +13,7 @@ export class QuestionEditComponent {
   question: Question;
   title: string;
   form: FormGroup;
+  activityLog: string;
   //TRUE jeśli istnieje, FALSE jeśli nowe pytanie
   editMode: boolean;
 
@@ -49,6 +50,35 @@ export class QuestionEditComponent {
     this.form = this.fb.group({
       Text: ['', Validators.required]
     });
+
+    this.activityLog = '';
+    this.log("Formularz został zainicjalizowany.");
+
+    //Reaguj na zmiany w formularzu
+    this.form.valueChanges
+      .subscribe(val => {
+        if (!this.form.dirty) {
+          this.log("Model formularza wczytany.");
+        }
+        else {
+          this.log("Formularz zaktualizowany przez użytkownika.");
+        }
+      })
+
+    //Reaguj na zmiany w kontrolce form.Text
+    this.form.get("Text")!.valueChanges
+      .subscribe(val => {
+        if (!this.form.dirty) {
+          this.log("Kontrolka Text wczytana z wartością domyślną.");
+        }
+        else {
+          this.log("Kontrolka Text uaktualniona przez użytkownika.");
+        }
+      })
+  }
+
+  log(str: string) {
+    this.activityLog += "[" + new Date().toLocaleString() + "] " + str + "<br/>";
   }
 
   updateForm() {

@@ -21,5 +21,22 @@
       </button>
     </div>
   </form>
+  <div style="margin-top: 20px;border:solid;">
+    <div style="background-color:cornflowerblue;border-bottom:solid;">Debugowanie formularza</div>
+    <div>
+      <p><strong>Wartości formularza:</strong></p>
+      <div>
+        {{ form.value | json}}
+      </div>
+      <p><strong>Status formularza:</strong></p>
+      <div>
+        {{ form.status | json}}
+      </div>
+      <p><strong>Dziennik aktywności formularza:</strong></p>
+      <div>
+        <span *ngIf="activityLog" [innerHTML]="activityLog"></span>
+      </div>
+    </div>
+  </div>
   <answer-list [question]="question" *ngIf="editMode"></answer-list>
 </div>
