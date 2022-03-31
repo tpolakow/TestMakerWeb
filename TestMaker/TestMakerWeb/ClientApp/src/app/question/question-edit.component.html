@@ -1,18 +1,42 @@
 <h2>{{title}}</h2>
 <div class="question-edit">
-  <div>
-    <label for="text">Treść pytania:</label>
-    <br/>
-    <textarea id="text" [(ngModel)]="question.Text"
-              placeholder="Wpisz odpowiednią treść..."></textarea>
-  </div>
-  <div>
-    <input *ngIf="editMode" type="button" value="Zapisz zmiany"
-           (click)="onSubmit(question)" />
-    <input *ngIf="!editMode" type="button" value="Utwórz pytanie"
-           (click)="onSubmit(question)" />
-    <input type="button" value="Anuluj"
-           (click)="onBack()" />
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="text">Treść pytania:</label>
+      <br />
+      <textarea id="text" formControlName="Text" required placeholder="Wpisz odpowiednią treść..."></textarea>
+      <div *ngIf="hasError('Text')">
+        To pole jest wymagane.
+      </div>
+    </div>
+    <div>
+      <button *ngIf="editMode" type="submit" [disabled]="form.invalid">
+        Zapisz zmiany
+      </button>
+      <button *ngIf="!editMode" type="submit" [disabled]="form.invalid">
+        Utwórz pytanie
+      </button>
+      <button type="submit" (click)="onBack()">
+        Anuluj
+      </button>
+    </div>
+  </form>
+  <div style="margin-top: 20px;border:solid;">
+    <div style="background-color:cornflowerblue;border-bottom:solid;">Debugowanie formularza</div>
+    <div>
+      <p><strong>Wartości formularza:</strong></p>
+      <div>
+        {{ form.value | json}}
+      </div>
+      <p><strong>Status formularza:</strong></p>
+      <div>
+        {{ form.status | json}}
+      </div>
+      <p><strong>Dziennik aktywności formularza:</strong></p>
+      <div>
+        <span *ngIf="activityLog" [innerHTML]="activityLog"></span>
+      </div>
+    </div>
   </div>
   <answer-list [question]="question" *ngIf="editMode"></answer-list>
 </div>

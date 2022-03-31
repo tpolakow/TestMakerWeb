@@ -1,28 +1,36 @@
 <h2>{{title}}</h2>
 <div class="quiz-edit">
-  <div>
-    <label for="title">Tytuł quizu:</label>
-    <br />
-    <input type="text" id="title" [(ngModel)]="quiz.Title" placeholder="Wpisz tytuł..." />
-  </div>
-  <div>
-    <label for="title">Opis quizu:</label>
-    <br />
-    <input type="text" id="description" [(ngModel)]="quiz.Description" placeholder="Wpisz opis..." />
-  </div>
-  <div>
-    <label for="title">Dodatkowe informacje o quizie:</label>
-    <br />
-    <textarea id="text" [(ngModel)]="quiz.Text" placeholder="Wpisz text..."></textarea>
-  </div>
-  <div>
-    <input *ngIf="editMode" type="button" value="Zapisz zmiany"
-           (click)="onSubmit(quiz)" />
-    <input *ngIf="!editMode" type="button" value="Utwórz quiz"
-           (click)="onSubmit(quiz)" />
-    <input type="button" value="Anuluj"
-           (click)="onBack()" />
-  </div>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="title">Tytuł quizu:</label>
+      <br />
+      <input type="text" id="title" formControlName="Title" required placeholder="Wpisz tytuł..." />
+      <div *ngIf="hasError('Title')">
+        To pole jest wymagane.
+      </div>
+    </div>
+    <div>
+      <label for="title">Opis quizu:</label>
+      <br />
+      <input type="text" id="description" formControlName="Description" placeholder="Wpisz opis..." />
+    </div>
+    <div>
+      <label for="title">Dodatkowe informacje o quizie:</label>
+      <br />
+      <textarea id="text" formControlName="Text" placeholder="Wpisz text..."></textarea>
+    </div>
+    <div>
+      <button *ngIf="editMode" type="submit" [disabled]="form.invalid">
+        Zapisz zmiany
+      </button>
+      <button *ngIf="!editMode" type="submit" [disabled]="form.invalid">
+        Utwórz quiz
+      </button>
+      <button type="submit" (click)="onBack()">
+        Anuluj
+      </button>
+    </div>
+  </form>
   <question-list [quiz]="quiz" *ngIf="editMode"></question-list>
   <result-list [quiz]="quiz" *ngIf="editMode"></result-list>
 </div>
