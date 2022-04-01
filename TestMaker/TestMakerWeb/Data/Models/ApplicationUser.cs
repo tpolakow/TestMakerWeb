@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestMakerWeb.Data
 {
-  public class ApplicationUser
+  public class ApplicationUser : IdentityUser
   {
     #region Konstruktor
     public ApplicationUser()
@@ -16,16 +17,16 @@ namespace TestMakerWeb.Data
     #endregion
 
     #region Właściwości
-    [Key]
-    [Required]
-    public string Id { get; set; }
+    //[Key]
+    //[Required]
+    //public string Id { get; set; }
 
-    [Required]
-    [MaxLength(128)]
-    public string UserName { get; set; }
+    //[Required]
+    //[MaxLength(128)]
+    //public string UserName { get; set; }
 
-    [Required]
-    public string Email { get; set; }
+    //[Required]
+    //public string Email { get; set; }
 
     public string DisplayName { get; set; }
 

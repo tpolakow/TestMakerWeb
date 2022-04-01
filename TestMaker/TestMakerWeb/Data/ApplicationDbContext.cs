@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace TestMakerWeb.Data
 {
-  public class ApplicationDbContext : DbContext
+  public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
   {
     #region Konstruktor
     public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -47,7 +47,7 @@ namespace TestMakerWeb.Data
     #endregion
 
     #region Właściwości
-    public DbSet<ApplicationUser> Users { get; set; }
+    //public DbSet<ApplicationUser> Users { get; set; }
     public DbSet<Quiz> Quizzes { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
