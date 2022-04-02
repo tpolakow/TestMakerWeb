@@ -6,13 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerWeb.Data;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerWeb.Controllers
 {
   public class QuizController : BaseApiController
   {
     #region Konstruktor
-    public QuizController(ApplicationDbContext context) : base(context) { }
+    public QuizController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
     #endregion
 
     #region Metody dostosowujące do konwencji REST

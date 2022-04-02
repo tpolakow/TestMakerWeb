@@ -6,12 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerWeb.Data;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerWeb.Controllers
 {
   public class AnswerController : BaseApiController
   {
-    public AnswerController(ApplicationDbContext context) : base(context) { }
+    public AnswerController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
     #region Metody dostosowujące do konwencji REST
     ///<summary>
     ///Pobiera odpowiedź o podanym {id}
