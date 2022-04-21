@@ -44,6 +44,7 @@
     <None Remove="ClientApp\src\app\interfaces\question.ts" />
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\src\app\interfaces\result.ts" />
+    <None Remove="ClientApp\src\app\interfaces\token.response.ts" />
     <None Remove="ClientApp\src\app\login\login.component.ts" />
     <None Remove="ClientApp\src\app\pagenotfound\pagenotfound.component.ts" />
     <None Remove="ClientApp\src\app\question\question-edit.component.ts" />
@@ -53,6 +54,7 @@
     <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
     <None Remove="ClientApp\src\app\result\result-edit.component.ts" />
     <None Remove="ClientApp\src\app\result\result-list.component.ts" />
+    <None Remove="ClientApp\src\app\services\auth.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,6 +73,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\question.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\token.response.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\pagenotfound\pagenotfound.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -92,6 +95,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\result\result-list.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\services\auth.service.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
