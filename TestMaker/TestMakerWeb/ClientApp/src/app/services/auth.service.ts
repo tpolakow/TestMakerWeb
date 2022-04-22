@@ -2,6 +2,8 @@ import { EventEmitter, Inject, Injectable, PLATFORM_ID } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
+import 'rxjs/Rx';
+import 'rxjs/add/operator/map'
 
 @Injectable()
 export class AuthService {
