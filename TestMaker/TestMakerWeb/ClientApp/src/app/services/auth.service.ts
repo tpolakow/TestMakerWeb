@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import 'rxjs/Rx';
 import 'rxjs/add/operator/map'
+import { catchError, map } from 'rxjs/operators'
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
   clientId: string = "TestMaker";
 
   constructor(private http: HttpClient,
-    @Inject('PLATFORM_ID') private platformId: any) {
+    @Inject(PLATFORM_ID) private platformId: any) {
   }
 
   login(username: string, password: string): Observable<boolean> {
@@ -26,7 +27,7 @@ export class AuthService {
       scope: "offline_access profile email"
     };
 
-    return this.http.post<TokenResponse>(url, data).map((res) => {
+    return this.http.post<TokenResponse>(url, data).pipe(map((res) => {
       let token = res && res.token;
       //jeśli otrzymaliśmy token, logowanie powiodło się
       if (token) {
@@ -37,10 +38,9 @@ export class AuthService {
       }
       //Logowanie nieudane
       return Observable.throw('Unauthorized');
-    })
-      .catch(error => {
-        return new Observable<any>(error);
-      });
+    }), catchError(error => {
+      return new Observable<any>(error);
+    }))
   }
 
   logout(): boolean {
