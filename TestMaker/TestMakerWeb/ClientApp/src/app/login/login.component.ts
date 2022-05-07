@@ -39,9 +39,9 @@ export class LoginComponent {
       //Logowanie udane
       //Wyświetl dane logowania w okienku alert.
       //WAŻNE: usuń po zakończeniu testu
-      alert("Logowanie udane "
-        + "NAZWA UŻYTKOWNIKA: " + username
-        + " TOKEN: " + this.authService.getAuth()!.token);
+      //alert("Logowanie udane "
+      //  + "NAZWA UŻYTKOWNIKA: " + username
+      //  + " TOKEN: " + this.authService.getAuth()!.token);
 
       this.router.navigate(["home"]);
     },
