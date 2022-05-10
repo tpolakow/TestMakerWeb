@@ -50,6 +50,10 @@ namespace TestMakerWeb.Data
     ///Lista wszystkich quizów utworzonych przez tego użytkownika.
     ///</summary>
     public virtual List<Quiz> Quizzes { get; set; }
+    ///<summary>
+    ///Lista wszystkich tokenów odświeżania utworzonych dla tego użytkownika.
+    ///</summary>
+    public virtual List<Token> Tokens { get; set; }
     #endregion
   }
 }
