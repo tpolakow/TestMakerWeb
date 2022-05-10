@@ -9,6 +9,7 @@ using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TestMakerWeb.Controllers
 {
@@ -80,8 +81,12 @@ namespace TestMakerWeb.Controllers
       quiz.CreatedDate = DateTime.Now;
       quiz.LastModifiedDate = quiz.CreatedDate;
 
-      //Tymczasowo ustaw autora na użytkownika administracyjnego
-      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+      ////Tymczasowo ustaw autora na użytkownika administracyjnego
+      //quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+
+      //Pobierz id aktualnego użytkownika
+      quiz.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
 
       //Dodaj nowy quiz
       DbContext.Quizzes.Add(quiz);

@@ -108,9 +108,10 @@ namespace TestMakerWeb
         app.UseSpaStaticFiles();
       }
 
-      app.UseAuthentication();
-
       app.UseRouting();
+
+      app.UseAuthentication();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {

@@ -8,6 +8,7 @@ using TestMakerWeb.Data;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerWeb.Controllers
 {
