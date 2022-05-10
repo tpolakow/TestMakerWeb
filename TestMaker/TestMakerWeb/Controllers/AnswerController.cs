@@ -8,6 +8,7 @@ using TestMakerWeb.Data;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerWeb.Controllers
 {
@@ -40,6 +41,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt AnswerViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]AnswerViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -60,6 +62,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt AnswerViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]AnswerViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -87,6 +90,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacej odpowiedzi</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var answer = DbContext.Answers.Where(q => q.Id == id).FirstOrDefault();

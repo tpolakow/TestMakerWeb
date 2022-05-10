@@ -43,6 +43,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuestionViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]QuestionViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -63,6 +64,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuestionViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]QuestionViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -89,6 +91,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacego pytania</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var question = DbContext.Questions.Where(q => q.Id == id).FirstOrDefault();

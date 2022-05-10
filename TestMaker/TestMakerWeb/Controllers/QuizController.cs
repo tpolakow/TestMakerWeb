@@ -8,6 +8,7 @@ using TestMakerWeb.Data;
 using Mapster;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerWeb.Controllers
 {
@@ -59,6 +60,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]QuizViewModel model)
     {
       //Zwraca ogólny kod statusu HTTP 500 (Server Error),
@@ -94,6 +96,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]QuizViewModel model)
     {
       //Zwraca ogólny kod statusu HTTP 500 (Server Error),
@@ -133,6 +136,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacego quizu</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
