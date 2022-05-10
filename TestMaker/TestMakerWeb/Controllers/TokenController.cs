@@ -30,6 +30,8 @@ namespace TestMakerWeb.Controllers
       {
         case "password":
           return await GetToken(model);
+        case "refresh_token":
+          return await RefreshToken(model);
         default:
           //Nieobslugiwane, zwroc kod statusu 401
           return new UnauthorizedResult();
@@ -51,41 +53,108 @@ namespace TestMakerWeb.Controllers
           return new UnauthorizedResult();
         }
         //OK
-        DateTime now = DateTime.UtcNow;
+        var rt = CreateRefreshToken(model.client_id, user.Id);
 
-        //Dodaj odpowiednie roszczenia do JWT (RFC7519)
-        var claims = new[]
-        {
-          new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-          new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-          new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
-        };
+        //Dodaj nowy token odswiezania do bazy
+        DbContext.Tokens.Add(rt);
+        DbContext.SaveChanges();
 
-        var tokenExpirationMins = Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
-        var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
-
-        var token = new JwtSecurityToken(
-          issuer: Configuration["Auth:Jwt:Issuer"],
-          audience: Configuration["Auth:Jwt:Audience"],
-          claims: claims,
-          notBefore: now,
-          expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
-          signingCredentials: new SigningCredentials(issuerSigningKey, SecurityAlgorithms.HmacSha256)
-        );
-        var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-        //Zbuduj i zwroc odpowiedz
-        var response = new TokenResponseViewModel()
-        {
-          token = encodedToken,
-          expiration = tokenExpirationMins
-        };
-        return Json(response);
+        //Utworz i zwroc token dostepowy
+        var t = CreateAccessToken(user.Id, rt.Value);
+        return Json(t);
       }
       catch (Exception ex)
       {
         return new UnauthorizedResult();
       }
+    }
+
+    private async Task<IActionResult> RefreshToken(TokenRequestViewModel model)
+    {
+      try
+      {
+        //Sprawdź czy otrzymany token odswiezania istnieje dla danego ClientId
+        var rt = DbContext.Tokens.
+          FirstOrDefault(t => t.ClientId == model.client_id && t.Value == model.refresh_token);
+
+        if (rt == null)
+        {
+          //Token nie istnieje lub jest niepoprawny (albo przekazano złe ClientId)
+          return new UnauthorizedResult();
+        }
+
+        //Sprawdź czy istnieje uzytkownik o UserId z tokena odswiezania
+        var user = await UserManager.FindByIdAsync(rt.UserId);
+
+        if (user == null)
+        {
+          return new UnauthorizedResult();
+        }
+
+        //Wygeneruj nowy token odswiezania
+        var rtNew = CreateRefreshToken(rt.ClientId, rt.UserId);
+
+        //Unieważnij stary token odswiezania(usun go)
+        DbContext.Tokens.Remove(rt);
+        //dodaj nowy token odswiezania
+        DbContext.Tokens.Add(rtNew);
+
+        DbContext.SaveChanges();
+
+        //Utwórz nowy token dostępowy
+        var response = CreateAccessToken(rtNew.UserId, rtNew.Value);
+        //..i wyslij go do klienta
+        return Json(response);
+      }
+      catch(Exception ex)
+      {
+        return new UnauthorizedResult();
+      }
+    }
+
+    private Token CreateRefreshToken(string clientId, string userId)
+    {
+      return new Token()
+      {
+        ClientId = clientId,
+        UserId = userId,
+        Type = 0,
+        Value = Guid.NewGuid().ToString("N"),
+        CreatedDate = DateTime.UtcNow
+      };
+    }
+
+    private TokenResponseViewModel CreateAccessToken(string userId, string refreshToken)
+    {
+      DateTime now = DateTime.UtcNow;
+
+      //DOdaj odpowiednie roszczenia do JWT
+      var claims = new[]
+      {
+        new Claim(JwtRegisteredClaimNames.Sub, userId),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeSeconds().ToString())
+      };
+
+      var tokenExpirationMins = Configuration.GetValue<int>("Auth:Jwt:TokenExpirationInMinutes");
+      var issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"]));
+
+      var token = new JwtSecurityToken(
+        issuer: Configuration["Auth:Jwt:Issuer"],
+        audience: Configuration["Auth:Jwt:Audience"],
+        claims: claims,
+        notBefore: now,
+        expires: now.Add(TimeSpan.FromMinutes(tokenExpirationMins)),
+        signingCredentials: new SigningCredentials(issuerSigningKey, SecurityAlgorithms.HmacSha256)
+      );
+      var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+      return new TokenResponseViewModel()
+      {
+        token = encodedToken,
+        expiration = tokenExpirationMins,
+        refresh_token = refreshToken
+      };
     }
   }
 }
