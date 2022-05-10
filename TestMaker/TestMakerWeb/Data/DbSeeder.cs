@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,44 @@ namespace TestMakerWeb.Data
   public class DbSeeder
   {
     #region Metody publiczne
-    public static void Seed(ApplicationDbContext dbContext)
+    public static void Seed(ApplicationDbContext dbContext, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
     {
       //Utwórz domyślnych użytkowników (jeśli nie ma żadnych)
       if (!dbContext.Users.Any())
-        CreateUsers(dbContext);
+        CreateUsers(dbContext, roleManager, userManager)
+          .GetAwaiter()
+          .GetResult();
       //Utwórz domyślne quizy (jeśli nie ma żadnych) wraz z pytaniami i odpowiedziami
       if (!dbContext.Quizzes.Any())
         CreateQuizzes(dbContext);
     }
     #endregion
     #region Metody generujące
-    private static void CreateUsers(ApplicationDbContext dbContext)
+    private static async Task CreateUsers(ApplicationDbContext dbContext,
+      RoleManager<IdentityRole> roleManager,
+      UserManager<ApplicationUser> userManager)
     {
       //Zmienne lokalne
       DateTime createdDate = DateTime.Now;
       DateTime lastModifiedDate = DateTime.Now;
 
+      string role_Administrator = "Administrator";
+      string role_RegisteredUser = "ZarejestrowanyUżytkownik";
+
+      //Utworzenie ról (jeśli jeszcze nie istnieją)
+      if (!await roleManager.RoleExistsAsync(role_Administrator))
+      {
+        await roleManager.CreateAsync(new IdentityRole(role_Administrator));
+      }
+      if (!await roleManager.RoleExistsAsync(role_RegisteredUser))
+      {
+        await roleManager.CreateAsync(new IdentityRole(role_RegisteredUser));
+      }
+
       //Utwórz konto użytkownika "Admin" (jeśli jeszcze nie istnieje)
       var user_Admin = new ApplicationUser()
       {
-        Id = Guid.NewGuid().ToString(),
+        SecurityStamp = Guid.NewGuid().ToString(),
         UserName = "Admin",
         Email = "jamaszi@gmail.com",
         DisplayName = "TomaH",
@@ -37,14 +55,22 @@ namespace TestMakerWeb.Data
         LastModifiedDate = lastModifiedDate
       };
 
-      //Wstaw do bazy danych użytkownika Admin
-      dbContext.Users.Add(user_Admin);
+      //Wstaw do bazy danych użytkownika Admin i przypisz mu obie utworzone role
+      if(await userManager.FindByNameAsync(user_Admin.UserName) == null)
+      {
+        await userManager.CreateAsync(user_Admin, "Pass4Admin");
+        await userManager.AddToRoleAsync(user_Admin, role_RegisteredUser);
+        await userManager.AddToRoleAsync(user_Admin, role_Administrator);
+        //Usuń blokadę i potwierdz email
+        user_Admin.EmailConfirmed = true;
+        user_Admin.LockoutEnabled = false;
+      }
 
 #if DEBUG
       //Utwórz przykładowe konta zarejestrowanych użytkowników (jeśli jeszcze nie istnieją)
       var user_Tomasz = new ApplicationUser()
       {
-        Id = Guid.NewGuid().ToString(),
+        SecurityStamp = Guid.NewGuid().ToString(),
         UserName = "Tomasz",
         Email = "tomasz@testmaker.com",
         CreatedDate = createdDate,
@@ -53,7 +79,7 @@ namespace TestMakerWeb.Data
 
       var user_Kasia = new ApplicationUser()
       {
-        Id = Guid.NewGuid().ToString(),
+        SecurityStamp = Guid.NewGuid().ToString(),
         UserName = "Kasia",
         Email = "kasia@testmaker.com",
         DisplayName = "Katenade",
@@ -63,7 +89,7 @@ namespace TestMakerWeb.Data
 
       var user_Lechu = new ApplicationUser()
       {
-        Id = Guid.NewGuid().ToString(),
+        SecurityStamp = Guid.NewGuid().ToString(),
         UserName = "Lechu",
         Email = "lennyrogal@gmail.com",
         DisplayName = "lennyrogal",
@@ -71,11 +97,34 @@ namespace TestMakerWeb.Data
         LastModifiedDate = lastModifiedDate
       };
 
-      //Wstaw przykładowych użytkowników do bazy danych
-      dbContext.Users.AddRange(user_Tomasz, user_Kasia, user_Lechu);
+      //Wstaw przykładowych użytkowników do bazy danych i przypisz im rolę zarejestrowanych
+      if (await userManager.FindByNameAsync(user_Tomasz.UserName) == null)
+      {
+        await userManager.CreateAsync(user_Tomasz, "Pass4Tomasz");
+        await userManager.AddToRoleAsync(user_Tomasz, role_RegisteredUser);
+        //Usuń blokadę i potwierdz email
+        user_Tomasz.EmailConfirmed = true;
+        user_Tomasz.LockoutEnabled = false;
+      }
+      if (await userManager.FindByNameAsync(user_Kasia.UserName) == null)
+      {
+        await userManager.CreateAsync(user_Kasia, "Pass4Kasia");
+        await userManager.AddToRoleAsync(user_Kasia, role_RegisteredUser);
+        //Usuń blokadę i potwierdz email
+        user_Kasia.EmailConfirmed = true;
+        user_Kasia.LockoutEnabled = false;
+      }
+      if (await userManager.FindByNameAsync(user_Lechu.UserName) == null)
+      {
+        await userManager.CreateAsync(user_Lechu, "Pass4Lechu");
+        await userManager.AddToRoleAsync(user_Lechu, role_RegisteredUser);
+        //Usuń blokadę i potwierdz email
+        user_Lechu.EmailConfirmed = true;
+        user_Lechu.LockoutEnabled = false;
+      }
 #endif
 
-      dbContext.SaveChanges();
+      await dbContext.SaveChangesAsync();
     }
 
     private static void CreateQuizzes(ApplicationDbContext dbContext)

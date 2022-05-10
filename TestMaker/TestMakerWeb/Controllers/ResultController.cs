@@ -6,12 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerWeb.Data;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerWeb.Controllers
 {
   public class ResultController : BaseApiController
   {
-    public ResultController(ApplicationDbContext context) : base(context) { }
+    public ResultController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
+
     #region Metody dostosowujące do konwencji REST
     ///<summary>
     ///Pobiera wynik o podanym {id}
@@ -42,6 +47,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt ResultViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]ResultViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -67,6 +73,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt ResultViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]ResultViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -100,6 +107,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacego wyniku</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var result = DbContext.Results.Where(q => q.Id == id).FirstOrDefault();

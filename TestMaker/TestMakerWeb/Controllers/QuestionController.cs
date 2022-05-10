@@ -6,13 +6,17 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerWeb.Data;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TestMakerWeb.Controllers
 {
   public class QuestionController : BaseApiController
   {
     #region Konstruktor
-    public QuestionController(ApplicationDbContext context) : base(context) { }
+    public QuestionController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
     #endregion
 
     #region Metody dostosowujące do konwencji REST
@@ -40,6 +44,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuestionViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]QuestionViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -60,6 +65,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuestionViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]QuestionViewModel model)
     {
       if (model == null) return new StatusCodeResult(500);
@@ -86,6 +92,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacego pytania</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var question = DbContext.Questions.Where(q => q.Id == id).FirstOrDefault();

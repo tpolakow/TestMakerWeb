@@ -1,11 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TestMakerWeb.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System;
 
 namespace TestMakerWeb
 {
@@ -36,6 +41,44 @@ namespace TestMakerWeb
         options =>
         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
       );
+
+      //Dodanie obs³ugi ASP.NET Identity
+      services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
+      {
+        opts.Password.RequireDigit = true;
+        opts.Password.RequireLowercase = true;
+        opts.Password.RequireUppercase = true;
+        opts.Password.RequireNonAlphanumeric = false;
+        opts.Password.RequiredLength = 7;
+      })
+        .AddEntityFrameworkStores<ApplicationDbContext>();
+
+      //Dodanie uwierzytelniania za pomoc¹ tokenów JWT
+      services.AddAuthentication(opts =>
+      {
+        opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      })
+        .AddJwtBearer(cfg =>
+        {
+          cfg.RequireHttpsMetadata = false;
+          cfg.SaveToken = true;
+          cfg.TokenValidationParameters = new TokenValidationParameters()
+          {
+            //Konfiguracja standardowa
+            ValidIssuer = Configuration["Auth:Jwt:Issuer"],
+            ValidAudience = Configuration["Auth:Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:Jwt:Key"])),
+            ClockSkew = TimeSpan.Zero,
+
+            //Prze³¹czniki zwi¹zane z bezpieczeñstwem
+            RequireExpirationTime = true,
+            ValidateIssuer = true,
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = true
+          };
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +110,9 @@ namespace TestMakerWeb
 
       app.UseRouting();
 
+      app.UseAuthentication();
+      app.UseAuthorization();
+
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
@@ -91,10 +137,15 @@ namespace TestMakerWeb
       using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
       {
         var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+
+        var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+
         //Utwórz bazê danych, jeœli nie istnieje, i zastosuj wszystkie oczekuj¹ce migracje
         dbContext.Database.Migrate();
         //Wype³nij bazê danymi pocz¹tkowymi
-        DbSeeder.Seed(dbContext);
+        DbSeeder.Seed(dbContext, roleManager, userManager);
       }
     }
   }

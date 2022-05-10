@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mapster" Version="7.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.23" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.16" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.14" />
@@ -43,6 +44,7 @@
     <None Remove="ClientApp\src\app\interfaces\question.ts" />
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\src\app\interfaces\result.ts" />
+    <None Remove="ClientApp\src\app\interfaces\token.response.ts" />
     <None Remove="ClientApp\src\app\login\login.component.ts" />
     <None Remove="ClientApp\src\app\pagenotfound\pagenotfound.component.ts" />
     <None Remove="ClientApp\src\app\question\question-edit.component.ts" />
@@ -70,6 +72,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\question.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\token.response.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\pagenotfound\pagenotfound.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

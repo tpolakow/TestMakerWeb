@@ -6,13 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerWeb.Data;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TestMakerWeb.Controllers
 {
   public class QuizController : BaseApiController
   {
     #region Konstruktor
-    public QuizController(ApplicationDbContext context) : base(context) { }
+    public QuizController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+      IConfiguration configuration) : base(context, roleManager, userManager, configuration) { }
     #endregion
 
     #region Metody dostosowujące do konwencji REST
@@ -56,6 +61,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do wstawienia</param>
     [HttpPost]
+    [Authorize]
     public IActionResult Post([FromBody]QuizViewModel model)
     {
       //Zwraca ogólny kod statusu HTTP 500 (Server Error),
@@ -75,8 +81,12 @@ namespace TestMakerWeb.Controllers
       quiz.CreatedDate = DateTime.Now;
       quiz.LastModifiedDate = quiz.CreatedDate;
 
-      //Tymczasowo ustaw autora na użytkownika administracyjnego
-      quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+      ////Tymczasowo ustaw autora na użytkownika administracyjnego
+      //quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin").FirstOrDefault().Id;
+
+      //Pobierz id aktualnego użytkownika
+      quiz.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
 
       //Dodaj nowy quiz
       DbContext.Quizzes.Add(quiz);
@@ -91,6 +101,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="model">obiekt QuizViewModel z danymi do uaktualnienia</param>
     [HttpPut]
+    [Authorize]
     public IActionResult Put([FromBody]QuizViewModel model)
     {
       //Zwraca ogólny kod statusu HTTP 500 (Server Error),
@@ -130,6 +141,7 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<param name="id">id istniejacego quizu</param>
     [HttpDelete("{id}")]
+    [Authorize]
     public IActionResult Delete(int id)
     {
       var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
