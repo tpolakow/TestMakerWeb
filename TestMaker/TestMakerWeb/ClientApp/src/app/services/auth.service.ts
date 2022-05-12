@@ -27,20 +27,40 @@ export class AuthService {
       scope: "offline_access profile email"
     };
 
-    return this.http.post<TokenResponse>(url, data).pipe(map((res) => {
+    return this.getAuthFromServer(url, data);
+  }
+
+  //Spróbuj odświerzyć token
+  refreshToken(): Observable<boolean> {
+    var url = "api/token/auth";
+    var data = {
+      client_id: this.clientId,
+      //Wymagane do zalogowania sie przy uzyciu nazwy uzytkownika i hasla
+      grant_type: "refresh_token",
+      refresh_token: this.getAuth()!.refresh_token,
+      //Oddzielona spacjami lista zakresów, dla których token będzie ważny
+      scope: "offline_access profile email"
+    };
+
+    return this.getAuthFromServer(url, data);
+  }
+
+  getAuthFromServer(url: string, data: any): Observable<boolean> {
+    return this.http.post<TokenResponse>(url, data).map((res) => {
       let token = res && res.token;
-      //jeśli otrzymaliśmy token, logowanie powiodło się
+      //Jeśli jest token, logowanie sie udalo
       if (token) {
-        //Zapamiętaj nazwę użytkownika i token JWT
+        //zapamietaj nazwe uzytkownika i tokeny
         this.setAuth(res);
-        //Logowanie udane
-        return true
+        //logowanie udane
+        return true;
       }
-      //Logowanie nieudane
+      //logowanie nieudane
       return Observable.throw('Unauthorized');
-    }), catchError(error => {
-      return new Observable<any>(error);
-    }))
+    })
+      .catch(error => {
+        return new Observable<any>(error);
+      })
   }
 
   logout(): boolean {

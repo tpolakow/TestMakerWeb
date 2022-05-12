@@ -8,7 +8,7 @@
     <div>
       <input type="text" required
              formControlName="Username"
-             placeholder="Nazwa użytkownika lub adres email"/>
+             placeholder="Nazwa użytkownika lub adres email" />
       <div *ngIf="hasError('Username')">
         Wpisz poprawną nazwę użytkownika lub adres email.
       </div>
@@ -31,6 +31,11 @@
   <div>
     <a href="#">
       Zapomniałeś hasła?
+    </a>
+  </div>
+  <div>
+    <a [routerLink]="['/register']">
+      Nie masz konta? Kliknij tu, aby je utworzyć
     </a>
   </div>
 </div>

@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service'
 import { AuthInterceptor } from './services/auth.interceptor'
+import { AuthResponseInterceptor } from './services/auth.response.interceptor'
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
@@ -20,6 +21,7 @@ import { ResultListComponent } from './result/result-list.component';
 import { ResultEditComponent } from './result/result-edit.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './user/register.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
@@ -39,6 +41,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
     ResultEditComponent,
     AboutComponent,
     LoginComponent,
+    RegisterComponent,
     PageNotFoundComponent
   ],
   imports: [
@@ -60,6 +63,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
       { path: 'result/edit/:id', component: ResultEditComponent },
       { path: 'about', component: AboutComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
       { path: '**', component: PageNotFoundComponent }
     ])
   ],
@@ -68,6 +72,11 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthResponseInterceptor,
       multi: true
     }
   ],
