@@ -21,6 +21,7 @@ import { ResultListComponent } from './result/result-list.component';
 import { ResultEditComponent } from './result/result-edit.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './user/register.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
     ResultEditComponent,
     AboutComponent,
     LoginComponent,
+    RegisterComponent,
     PageNotFoundComponent
   ],
   imports: [
@@ -61,6 +63,7 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
       { path: 'result/edit/:id', component: ResultEditComponent },
       { path: 'about', component: AboutComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
       { path: '**', component: PageNotFoundComponent }
     ])
   ],

@@ -1,0 +1,52 @@
+<div>
+  <h2>{{title}}</h2>
+  <form [formGroup]="form"
+        (ngSubmit)="onSubmit()">
+    <div *ngIf="form.errors?.auth">
+      {{form.errors.auth}}
+    </div>
+    <div>
+      <input type="text" required
+             formControlName="Username"
+             placeholder="Nazwa użytkownika" />
+      <div *ngIf="hasError('Username')">
+        Wpisz nazwę użytkownika.
+      </div>
+    </div>
+    <div>
+      <input type="email" required
+             formControlName="Email"
+             placeholder="Adres email" />
+      <div *ngIf="hasError('Email')">
+        Wpisz adres email.
+      </div>
+    </div>
+    <div>
+      <input type="text" required
+             formControlName="DisplayName"
+             placeholder="Nazwa" />
+      <div *ngIf="hasError('DisplayName')">
+        Wpisz nazwę, którą będą widzieć inni użytkownicy.
+      </div>
+    </div>
+    <div>
+      <input type="password" required
+             formControlName="Password"
+             placeholder="Hasło" />
+      <div *ngIf="hasError('Password')">
+        Wpisz hasło.
+      </div>
+    </div>
+    <div>
+      <input type="password" required
+             formControlName="PasswordConfirm"
+             placeholder="Hasło" />
+      <div *ngIf="hasError('PasswordConfirm')">
+        Potwierdź hasło.
+      </div>
+    </div>
+    <button type="submit" [disabled]="form.invalid">
+      Zarejestruj się
+    </button>
+  </form>
+</div>

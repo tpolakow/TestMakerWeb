@@ -45,6 +45,7 @@
     <None Remove="ClientApp\src\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\src\app\interfaces\result.ts" />
     <None Remove="ClientApp\src\app\interfaces\token.response.ts" />
+    <None Remove="ClientApp\src\app\interfaces\user.ts" />
     <None Remove="ClientApp\src\app\login\login.component.ts" />
     <None Remove="ClientApp\src\app\pagenotfound\pagenotfound.component.ts" />
     <None Remove="ClientApp\src\app\question\question-edit.component.ts" />
@@ -54,6 +55,7 @@
     <None Remove="ClientApp\src\app\quiz\quiz.component.ts" />
     <None Remove="ClientApp\src\app\result\result-edit.component.ts" />
     <None Remove="ClientApp\src\app\result\result-list.component.ts" />
+    <None Remove="ClientApp\src\app\user\register.component.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +63,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\answer\answer-list.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\user.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\result.ts">
@@ -92,6 +97,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\result\result-list.component.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\app\user\register.component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

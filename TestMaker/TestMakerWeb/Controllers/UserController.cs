@@ -27,7 +27,6 @@ namespace TestMakerWeb.Controllers
     ///</summary>
     ///<returns>Tworzy i zwraca nowego użytkownika</returns>
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Post([FromBody]UserViewModel model)
     {
       //Zwraca ogólny kod statusu HTTP 500 (Server Error),
@@ -55,7 +54,7 @@ namespace TestMakerWeb.Controllers
       };
 
       //Dodaj uzytkownika do bazy z wybranym haslem
-      await UserManager.CreateAsync(user, model.password);
+      await UserManager.CreateAsync(user, model.Password);
 
       //Przypisz uzytkownikowi rolę "ZarejestrowanyUżytkownik"
       await UserManager.AddToRoleAsync(user, "ZarejestrowanyUżytkownik");
