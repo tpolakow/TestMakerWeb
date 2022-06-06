@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/testmakerdbserver/databases/TestMakerDB",
+      "type": "mssql.azure",
+      "connectionId": "TestMakerDBConnectionString",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
